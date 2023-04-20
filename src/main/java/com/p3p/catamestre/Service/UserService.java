@@ -21,6 +21,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,6 +47,18 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getLoggedUser(Principal principal) {
+
+
+        Optional<User> userOptional = userRepository.findByEmail(principal.getName());
+        if(userOptional.isPresent()){
+           return userOptional.get();
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+    }
+
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
@@ -68,6 +81,7 @@ public class UserService {
             throw new Exception("Invalid email address: " + user.getEmail());
         }
         user.setPassword(this.encodePassword(user.getPassword()));
+
 
         return userRepository.save(user);
     }

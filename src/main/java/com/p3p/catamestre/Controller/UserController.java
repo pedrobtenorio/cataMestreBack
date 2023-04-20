@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -26,6 +27,17 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    @ApiOperation(value = "Get current logged user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User returned successfully"),
+            @ApiResponse(code = 404, message = "User not found ")
+    })
+    public ResponseEntity<User>  getUserById(Principal principal) {
+        User user = this.userService.getLoggedUser(principal);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
