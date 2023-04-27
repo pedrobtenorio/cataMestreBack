@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/0000000002_change-user-column-name.sql
   - include:
       file: db/changelog/0000000003_change-studies-column-name.sql
+  - include:
+      file: db/changelog/0000000004_create_occurrence_table.sql
