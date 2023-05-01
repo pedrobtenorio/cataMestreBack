@@ -18,14 +18,13 @@ public class Studies {
 
     private String code;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private User professor;
+
 
     private String name;
 
     private String term;
 
-    private String classroom;
+
 
     private String color;
 

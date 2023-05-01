@@ -23,6 +23,11 @@ public class StudiesOccurrence {
     private boolean active;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    private User professor;
+
+    private String classroom;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private Studies studie;
 
 
