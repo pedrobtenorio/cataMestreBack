@@ -1,5 +1,4 @@
 package com.p3p.catamestre.Controller;
-
 import com.p3p.catamestre.Domain.AuthResponse;
 import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Security.Credential;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.util.List;
 
@@ -62,7 +60,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @ApiOperation(value = "Create a user", notes = "Create a new user.")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "User created successfully")
