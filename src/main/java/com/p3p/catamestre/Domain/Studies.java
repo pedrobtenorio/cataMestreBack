@@ -39,7 +39,7 @@ public class Studies {
     }
 
     @Enumerated(EnumType.STRING)
-    private Modality modalitie;
+    private Modality modality;
 
 
 }

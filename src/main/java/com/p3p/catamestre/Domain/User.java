@@ -42,9 +42,9 @@ public class User implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdatedDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_studies", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "studies_id"))
-    private Set<Studies> classes = new HashSet<>();
+    private Set<Studies> studies = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

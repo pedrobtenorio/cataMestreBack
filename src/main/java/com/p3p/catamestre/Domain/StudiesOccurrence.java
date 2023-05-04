@@ -28,7 +28,7 @@ public class StudiesOccurrence {
     private String classroom;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Studies studie;
+    private Studies studies;
 
 
     public enum StudyType {
