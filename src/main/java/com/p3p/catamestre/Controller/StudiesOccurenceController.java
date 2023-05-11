@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,10 +66,11 @@ public class StudiesOccurenceController {
         return new ResponseEntity<>(studiesOccurrences, HttpStatus.OK);
     }
 
+
     @GetMapping("/all")
-    @ApiOperation(value = "Get all studies occurrences that are active", notes = "Get a list of all studies occurrences that are active")
-    public ResponseEntity<List<StudiesOccurrence>> getAllActiveOccurrences() {
-        List<StudiesOccurrence> studiesOccurrences = occurrenceService.getAllActiveOccurrences();
+    @ApiOperation(value = "Get all studies occurrences", notes = "Get a list of all studies occurrences")
+    public ResponseEntity<Page<StudiesOccurrence>> getAllActiveOccurrences(Pageable pageable) {
+        Page<StudiesOccurrence> studiesOccurrences = occurrenceService.getAll(pageable);
         return new ResponseEntity<>(studiesOccurrences, HttpStatus.OK);
     }
 
