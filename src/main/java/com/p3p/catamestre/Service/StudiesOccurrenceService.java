@@ -68,7 +68,6 @@ public class StudiesOccurrenceService {
         Optional<Studies> studiesOptional = this.studiesRepository.findById(studyId);
         if (studiesOptional.isPresent()) {
             Studies studies = studiesOptional.get();
-            studiesOccurrence.setStudies(studies);
             this.studiesRepository.save(studies);
             return this.occurrenceRepository.save(studiesOccurrence);
         }

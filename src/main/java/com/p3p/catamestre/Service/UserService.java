@@ -88,6 +88,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public List<User> getAllProfessors() {
+        return this.userRepository.findByRoleOrderById(User.Role.TEACHER);
+    }
+
 
     public User updateUser(Long id, User user) {
         User existingUser = userRepository.findById(id)

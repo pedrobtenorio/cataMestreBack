@@ -31,8 +31,9 @@ public class Studies {
     private String onlineLink;
 
     private String onlineClassroom;
-    @OneToMany
+    @OneToMany(mappedBy = "studies", cascade = CascadeType.ALL)
     private List<StudiesOccurrence> occurrences;
+
 
     public enum Modality {
         MANDATORY, ELECTIVE

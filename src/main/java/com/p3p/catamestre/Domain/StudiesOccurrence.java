@@ -1,5 +1,7 @@
 package com.p3p.catamestre.Domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +29,8 @@ public class StudiesOccurrence {
 
     private String classroom;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne
     private Studies studies;
 
 
