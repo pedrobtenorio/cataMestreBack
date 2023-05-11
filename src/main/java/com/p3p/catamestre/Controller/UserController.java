@@ -102,4 +102,11 @@ public class UserController {
         return this.userService.authenticate(credential);
     }
 
+
+    @GetMapping("/find-professors")
+    public ResponseEntity<List<User>> getAllProfessors() {
+       List<User> users = userService.getAllProfessors();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
 }
