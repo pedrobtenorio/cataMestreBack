@@ -6,18 +6,17 @@ import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Repository.StudiesOccurrenceRepository;
 import com.p3p.catamestre.Service.StudiesOccurrenceService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/studies_occurence")
+@RequestMapping("/studies_occurrence")
 public class StudiesOccurenceController {
 
     @Autowired
@@ -70,6 +69,18 @@ public class StudiesOccurenceController {
     public ResponseEntity<List<StudiesOccurrence>> getAllActiveOccurrences() {
         List<StudiesOccurrence> studiesOccurrences = occurrenceService.getAllActiveOccurrences();
         return new ResponseEntity<>(studiesOccurrences, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/create/{studyId}")
+    @ApiOperation(value="create new study occurrence")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Study Occurrence created created successfully"),
+            @ApiResponse(code = 406, message = "Not possible to create due to missing id"),
+    })
+    public ResponseEntity<StudiesOccurrence> create(@RequestBody StudiesOccurrence studiesOccurrence, @PathVariable Long studyId  ) {
+        StudiesOccurrence createdStudiesOccurrence =  this.occurrenceService.create(studiesOccurrence, studyId);
+        return new ResponseEntity<>(createdStudiesOccurrence, HttpStatus.OK);
     }
 
 

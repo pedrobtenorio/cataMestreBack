@@ -7,9 +7,12 @@ import com.p3p.catamestre.Repository.StudiesOccurrenceRepository;
 import com.p3p.catamestre.Repository.StudiesRepository;
 import com.p3p.catamestre.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudiesOccurrenceService {
@@ -48,7 +51,9 @@ public class StudiesOccurrenceService {
 
     public List<StudiesOccurrence> getAllByClassroom(String classroom) {
         return occurrenceRepository.findAllByClassroom(classroom);
-    };
+    }
+
+    ;
 
     public List<StudiesOccurrence> getAllByType(StudiesOccurrence.StudyType type) {
         return occurrenceRepository.findAllByType(type);
@@ -59,4 +64,14 @@ public class StudiesOccurrenceService {
     }
 
 
+    public StudiesOccurrence create(StudiesOccurrence studiesOccurrence, Long studyId) {
+        Optional<Studies> studiesOptional = this.studiesRepository.findById(studyId);
+        if (studiesOptional.isPresent()) {
+            Studies studies = studiesOptional.get();
+            studiesOccurrence.setStudies(studies);
+            this.studiesRepository.save(studies);
+            return this.occurrenceRepository.save(studiesOccurrence);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+    }
 }

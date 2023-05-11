@@ -6,6 +6,7 @@ import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Repository.UserRepository;
 import com.p3p.catamestre.Security.Credential;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,8 +45,9 @@ public class UserService {
 
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
+
 
     public User getLoggedUser(Principal principal) {
 
@@ -92,7 +94,6 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         existingUser.setUsername(user.getUsername());
         existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(this.encodePassword(user.getPassword()));
         existingUser.setRole(user.getRole());
         return userRepository.save(existingUser);
     }

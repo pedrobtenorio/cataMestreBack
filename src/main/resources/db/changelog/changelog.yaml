@@ -13,3 +13,9 @@ databaseChangeLog:
       file: db/changelog/0000000005_change_things_to_occurrence.sql
   - include:
       file: db/changelog/0000000006_create_modality_column.sql
+  - include:
+      file: db/changelog/0000000007_create_studies_id_column.sql
+  - include:
+      file: db/changelog/0000000008_rename_week_day.sql
+  - include:
+      file: db/changelog/00000000009_studies_occurrences_join.sql

@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,37 +59,22 @@ public class StudiesController {
     }
 
 
-//    @PostMapping("/create")
-//    @ApiOperation(value = "Create a user", notes = "Create a new user.")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 201, message = "User created successfully")
-//    })
-//    public ResponseEntity<User> createUser(@RequestBody User user) throws Exception {
-//        User createdUser = userService.createUser(user);
-//        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-//    }
-//
-//    @PutMapping("/{id}")
-//    @ApiOperation(value = "Update a user", notes = "Update an existing user.")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "User updated successfully"),
-//            @ApiResponse(code = 404, message = "User not found by ID")
-//    })
-//    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-//        User updatedUser = userService.updateUser(id, user);
-//        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    @ApiOperation(value = "Delete a user", notes = "Delete a user by its ID.")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 204, message = "User deleted successfully"),
-//            @ApiResponse(code = 404, message = "User not found by ID")
-//    })
-//    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-//        userService.deleteUser(id);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+    @GetMapping("/all")
+    public Page<Studies> getStudies(Pageable pageable) {
+        return this.studiesService.findAll(pageable);
+    }
+
+
+    @PostMapping("/create")
+    @ApiOperation(value="create new study")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Study created successfully"),
+            @ApiResponse(code = 401, message = "Study code already exist"),
+    })
+    public ResponseEntity<Studies> create(@RequestBody Studies studies) {
+        Studies createdStudies = this.studiesService.create(studies);
+        return new ResponseEntity<>(createdStudies, HttpStatus.OK);
+    }
 
 
 

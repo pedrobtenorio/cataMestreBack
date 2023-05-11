@@ -4,6 +4,8 @@ import com.p3p.catamestre.Domain.Studies;
 import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Repository.StudiesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,12 +43,23 @@ public class StudiesService {
         }
     }
 
+    public Page<Studies> findAll(Pageable pageable) {
+        return studiesRepository.findAll(pageable);
+    }
+
     public List<Studies> getAllByTerm(String term) {
         return studiesRepository.findAllByTerm(term);
     }
 
     public List<Studies> getAllByModality(Studies.Modality modality) {
         return studiesRepository.findAllByModality(modality);
+    }
+
+    public Studies create(Studies studies) {
+        if (studiesRepository.findByCode(studies.getCode()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        return this.studiesRepository.save(studies);
     }
 
 
