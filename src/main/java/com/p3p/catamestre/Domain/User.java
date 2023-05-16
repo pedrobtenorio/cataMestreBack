@@ -26,6 +26,8 @@ public class User implements UserDetails {
 
     private String username;
 
+    private String name;
+
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
