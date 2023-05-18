@@ -99,6 +99,7 @@ public class UserService {
         existingUser.setUsername(user.getUsername());
         existingUser.setEmail(user.getEmail());
         existingUser.setRole(user.getRole());
+        existingUser.setName(user.getName());
         return userRepository.save(existingUser);
     }
 

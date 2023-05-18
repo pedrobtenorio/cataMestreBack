@@ -72,9 +72,13 @@ public class StudiesOccurrenceService {
         Optional<Studies> studiesOptional = this.studiesRepository.findById(studyId);
         if (studiesOptional.isPresent()) {
             Studies studies = studiesOptional.get();
-            this.studiesRepository.save(studies);
-            return this.occurrenceRepository.save(studiesOccurrence);
+            studies.getOccurrences().add(studiesOccurrence); // add the new occurrence to the list
+            this.studiesRepository.save(studies); // save the updated Studies object
+            studiesOccurrence =  this.occurrenceRepository.save(studiesOccurrence); // save the StudiesOccurrence object
+            return studiesOccurrence;
         }
         throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
     }
+
+
 }

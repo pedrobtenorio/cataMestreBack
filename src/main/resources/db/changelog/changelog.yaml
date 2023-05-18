@@ -19,3 +19,7 @@ databaseChangeLog:
       file: db/changelog/0000000008_rename_week_day.sql
   - include:
       file: db/changelog/00000000009_studies_occurrences_join.sql
+  - include:
+      file: db/changelog/00000000010_create_name_column.sql
+  - include:
+      file: db/changelog/00000000011_copy_name.sql
