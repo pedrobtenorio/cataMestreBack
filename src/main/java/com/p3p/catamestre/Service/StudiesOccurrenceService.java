@@ -46,9 +46,7 @@ public class StudiesOccurrenceService {
     }
 
     public List<StudiesOccurrence> getAllByStudies(Long studies_id) {
-        return occurrenceRepository.findAllByStudies(
-                studiesRepository.getReferenceById(studies_id)
-        );
+        return occurrenceRepository.findAllByStudies(studies_id);
     }
 
     public List<StudiesOccurrence> getAllByTime(String time) {
