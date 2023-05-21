@@ -1,6 +1,7 @@
 package com.p3p.catamestre.Controller;
 
 import com.p3p.catamestre.Domain.Studies;
+import com.p3p.catamestre.Domain.StudiesOccurrence;
 import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Service.StudiesService;
 import io.swagger.annotations.ApiOperation;
@@ -76,6 +77,16 @@ public class StudiesController {
         return new ResponseEntity<>(createdStudies, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Get study by ID", notes = "Get a study by its Id.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Study returned successfully"),
+            @ApiResponse(code = 404, message = "Study not found by ID")
+    })
+    public ResponseEntity<Studies> getById(@PathVariable Long id) {
+        Studies studies = studiesService.getById(id);
+        return new ResponseEntity<>(studies, HttpStatus.OK);
+    }
 
 
 

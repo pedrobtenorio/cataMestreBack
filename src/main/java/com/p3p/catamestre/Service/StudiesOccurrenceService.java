@@ -80,5 +80,27 @@ public class StudiesOccurrenceService {
         throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
     }
 
+    public StudiesOccurrence update(Long id, StudiesOccurrence occurrence) {
+        StudiesOccurrence existingOccurrence = occurrenceRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Study occurrence not found"));
+        existingOccurrence.setStudies(occurrence.getStudies());
+        existingOccurrence.setClassroom(occurrence.getClassroom());
+        existingOccurrence.setProfessor(occurrence.getProfessor());
+        existingOccurrence.setTime(occurrence.getTime());
+        existingOccurrence.setType(occurrence.getType());
+        existingOccurrence.setWeekDay(occurrence.getWeekDay());
+
+        return occurrenceRepository.save(existingOccurrence);
+    }
+
+    public void delete(Long id) {
+        occurrenceRepository.deleteById(id);
+    }
+
+    public StudiesOccurrence getOccurrenceById(Long id) {
+        return occurrenceRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    }
+
 
 }

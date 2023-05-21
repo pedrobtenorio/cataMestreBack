@@ -71,6 +71,11 @@ public class StudiesService {
         return this.studiesRepository.save(studies);
     }
 
+    public Studies getById(Long id) {
+        return studiesRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    }
+
 
 
 }

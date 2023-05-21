@@ -86,5 +86,37 @@ public class StudiesOccurenceController {
         return new ResponseEntity<>(createdStudiesOccurrence, HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Update a studies occurrence", notes = "Update an existing studies occurence.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Occurence updated successfully"),
+            @ApiResponse(code = 404, message = "Occurence not found by ID")
+    })
+    public ResponseEntity<StudiesOccurrence> update(@PathVariable Long id, @RequestBody StudiesOccurrence occurrence) {
+        StudiesOccurrence updatedOccurrence = this.occurrenceService.update(id, occurrence);
+        return new ResponseEntity<>(updatedOccurrence, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Delete a study occurrence", notes = "Delete a study occurrence by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "User deleted successfully"),
+            @ApiResponse(code = 404, message = "User not found by ID")
+    })
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        this.occurrenceService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Get occurrence by ID", notes = "Get a user by its occurrence.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Occurrence returned successfully"),
+            @ApiResponse(code = 404, message = "Occurrence not found by ID")
+    })
+    public ResponseEntity<StudiesOccurrence> getOccurrenceById(@PathVariable Long id) {
+        StudiesOccurrence occurrence = occurrenceService.getOccurrenceById(id);
+        return new ResponseEntity<>(occurrence, HttpStatus.OK);
+    }
 
 }
