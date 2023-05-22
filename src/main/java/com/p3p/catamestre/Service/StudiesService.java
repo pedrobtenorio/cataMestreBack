@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +71,60 @@ public class StudiesService {
         }
         return this.studiesRepository.save(studies);
     }
+
+    public Studies update(Studies studies) {
+        Optional<Studies> studiesOptional = studiesRepository.findByCode(studies.getCode());
+        if (studiesOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        } else {
+            Studies study = studiesOptional.get();
+            study.setName(studies.getName());
+            study.setColor(studies.getColor());
+            study.setModality(studies.getModality());
+            study.setOnlineClassroom(studies.getOnlineClassroom());
+            study.setOnlineLink(studies.getOnlineLink());
+            study.setTerm(studies.getTerm());
+
+            List<StudiesOccurrence> existingOccurrences = study.getOccurrences();
+            List<StudiesOccurrence> updatedOccurrences = studies.getOccurrences();
+
+            // Delete occurrences that no longer exist in the updated study
+            // TODO: não está deletando as ocorrências de fato, apenas tirando seu studies_id
+            for (StudiesOccurrence existingOccurrence : existingOccurrences) {
+                if (!updatedOccurrences.contains(existingOccurrence)) {
+                    existingOccurrence.setStudies(null);
+                    studiesOccurrenceRepository.delete(existingOccurrence);
+                }
+            }
+
+            // Update or add new occurrences to the study
+            for (StudiesOccurrence updatedOccurrence : updatedOccurrences) {
+                updatedOccurrence.setStudies(study);
+                studiesOccurrenceRepository.save(updatedOccurrence);
+            }
+
+            return studiesRepository.save(study);
+        }
+
+
+
+
+
+    }
+
+//    public StudiesOccurrence update(Long id, StudiesOccurrence occurrence) {
+//        StudiesOccurrence existingOccurrence = occurrenceRepository.findById(id)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Study occurrence not found"));
+//        existingOccurrence.setStudies(occurrence.getStudies());
+//        existingOccurrence.setClassroom(occurrence.getClassroom());
+//        existingOccurrence.setProfessor(occurrence.getProfessor());
+//        existingOccurrence.setTime(occurrence.getTime());
+//        existingOccurrence.setType(occurrence.getType());
+//        existingOccurrence.setWeekDay(occurrence.getWeekDay());
+//
+//        return occurrenceRepository.save(existingOccurrence);
+//    }
+
 
     public Studies getById(Long id) {
         return studiesRepository.findById(id).orElseThrow(

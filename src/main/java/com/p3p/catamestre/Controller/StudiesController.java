@@ -77,6 +77,17 @@ public class StudiesController {
         return new ResponseEntity<>(createdStudies, HttpStatus.OK);
     }
 
+    @PutMapping("/update")
+    @ApiOperation(value="Update a study")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Study updated successfully"),
+            @ApiResponse(code = 401, message = "Study code doesn't exist"),
+    })
+    public ResponseEntity<Studies> update(@RequestBody Studies studies) {
+        Studies updatedStudies = this.studiesService.update(studies);
+        return new ResponseEntity<>(updatedStudies, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get study by ID", notes = "Get a study by its Id.")
     @ApiResponses(value = {
