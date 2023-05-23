@@ -1,5 +1,6 @@
 package com.p3p.catamestre.Controller;
 import com.p3p.catamestre.Domain.AuthResponse;
+import com.p3p.catamestre.Domain.Studies;
 import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Security.Credential;
 import com.p3p.catamestre.Service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -69,6 +71,14 @@ public class UserController {
         User createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
+
+    @PostMapping("/addClasses/{id}")
+    public ResponseEntity<User> addClassesToUser(@PathVariable Long id, @RequestBody Set<Studies> studies) {
+        User user = userService.AddClasses(id, studies);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a user", notes = "Update an existing user.")

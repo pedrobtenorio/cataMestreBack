@@ -117,7 +117,6 @@ public class UserService {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-
     }
 
     public ResponseEntity<AuthResponse> authenticate(Credential credential) {
