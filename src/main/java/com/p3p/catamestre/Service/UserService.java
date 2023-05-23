@@ -112,7 +112,7 @@ public class UserService {
         Optional<User> userOptional = this.userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.getStudies().addAll(studies);
+            user.setStudies(studies);
             return this.userRepository.save(user);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
