@@ -88,6 +88,18 @@ public class StudiesController {
         return new ResponseEntity<>(updatedStudies, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    @ApiOperation(value="Delete a study")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Study deleted successfully"),
+            @ApiResponse(code = 401, message = "Study code doesn't exist"),
+    })
+    public ResponseEntity<Studies> delete(@PathVariable Long id) {
+        Studies deletedStudy = this.studiesService.delete(id);
+        return new ResponseEntity<>(deletedStudy, HttpStatus.OK);
+
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get study by ID", notes = "Get a study by its Id.")
     @ApiResponses(value = {

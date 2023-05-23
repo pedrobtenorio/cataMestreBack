@@ -72,6 +72,26 @@ public class StudiesService {
         return this.studiesRepository.save(studies);
     }
 
+    public Studies delete(Long id) {
+        Optional<Studies> studiesOptional = studiesRepository.findById(id);
+        if (studiesOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        } else {
+            Studies study = studiesOptional.get();
+            List<StudiesOccurrence> occurrences = study.getOccurrences();
+
+            for (StudiesOccurrence occurrence : occurrences) {
+                    occurrence.setStudies(null);
+                    studiesOccurrenceRepository.delete(occurrence);
+            }
+
+            this.studiesRepository.deleteById(id);
+
+            return study;
+        }
+
+    }
+
     public Studies update(Studies studies) {
         Optional<Studies> studiesOptional = studiesRepository.findByCode(studies.getCode());
         if (studiesOptional.isEmpty()) {
