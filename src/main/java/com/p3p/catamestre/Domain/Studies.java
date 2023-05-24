@@ -28,9 +28,6 @@ public class Studies {
 
     private String color;
 
-    private String onlineLink;
-
-    private String onlineClassroom;
     @OneToMany(mappedBy = "studies", cascade = CascadeType.ALL)
     private List<StudiesOccurrence> occurrences;
 

@@ -101,8 +101,6 @@ public class StudiesService {
             study.setName(studies.getName());
             study.setColor(studies.getColor());
             study.setModality(studies.getModality());
-            study.setOnlineClassroom(studies.getOnlineClassroom());
-            study.setOnlineLink(studies.getOnlineLink());
             study.setTerm(studies.getTerm());
 
             List<StudiesOccurrence> existingOccurrences = study.getOccurrences();
