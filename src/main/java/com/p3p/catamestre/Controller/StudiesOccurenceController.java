@@ -86,14 +86,14 @@ public class StudiesOccurenceController {
         return new ResponseEntity<>(createdStudiesOccurrence, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/{studyId}")
     @ApiOperation(value = "Update a studies occurrence", notes = "Update an existing studies occurence.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Occurence updated successfully"),
             @ApiResponse(code = 404, message = "Occurence not found by ID")
     })
-    public ResponseEntity<StudiesOccurrence> update(@PathVariable Long id, @RequestBody StudiesOccurrence occurrence) {
-        StudiesOccurrence updatedOccurrence = this.occurrenceService.update(id, occurrence);
+    public ResponseEntity<StudiesOccurrence> update(@PathVariable Long id, @PathVariable Long studyId, @RequestBody StudiesOccurrence occurrence) {
+        StudiesOccurrence updatedOccurrence = this.occurrenceService.update(id, studyId,  occurrence);
         return new ResponseEntity<>(updatedOccurrence, HttpStatus.OK);
     }
 

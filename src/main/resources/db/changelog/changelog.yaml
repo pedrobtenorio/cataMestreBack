@@ -23,3 +23,5 @@ databaseChangeLog:
       file: db/changelog/00000000010_create_name_column.sql
   - include:
       file: db/changelog/00000000011_copy_name.sql
+  - include:
+      file: db/changelog/0000000012_change_things_to_occurrence.sql

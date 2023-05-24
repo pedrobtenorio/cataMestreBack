@@ -80,17 +80,26 @@ public class StudiesOccurrenceService {
         throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
     }
 
-    public StudiesOccurrence update(Long id, StudiesOccurrence occurrence) {
-        StudiesOccurrence existingOccurrence = occurrenceRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Study occurrence not found"));
-        existingOccurrence.setStudies(occurrence.getStudies());
-        existingOccurrence.setClassroom(occurrence.getClassroom());
-        existingOccurrence.setProfessor(occurrence.getProfessor());
-        existingOccurrence.setTime(occurrence.getTime());
-        existingOccurrence.setType(occurrence.getType());
-        existingOccurrence.setWeekDay(occurrence.getWeekDay());
-
-        return occurrenceRepository.save(existingOccurrence);
+    public StudiesOccurrence update(Long id, Long studiesId, StudiesOccurrence occurrence) {
+        Optional<Studies> optionalStudies = studiesRepository.findById(studiesId);
+        if(optionalStudies.isPresent()){
+            Studies studies = optionalStudies.get();
+            StudiesOccurrence existingOccurrence = occurrenceRepository.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Study occurrence not found"));
+            existingOccurrence.setClassroom(occurrence.getClassroom());
+            existingOccurrence.setProfessor(occurrence.getProfessor());
+            existingOccurrence.setTime(occurrence.getTime());
+            existingOccurrence.setType(occurrence.getType());
+            existingOccurrence.setClassroom(occurrence.getClassroom());
+            existingOccurrence.setOnlineClassroom(occurrence.getOnlineClassroom());
+            existingOccurrence.setOnlineLink(occurrence.getOnlineLink());
+            existingOccurrence.setWeekDay(occurrence.getWeekDay());
+            existingOccurrence.setStudies(studies);
+            existingOccurrence.setNotes(occurrence.getNotes());
+            existingOccurrence.setActive(occurrence.isActive());
+            return occurrenceRepository.save(existingOccurrence);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
 
     public void delete(Long id) {
