@@ -2,8 +2,12 @@ package com.p3p.catamestre.Service;
 
 import com.p3p.catamestre.Domain.Studies;
 import com.p3p.catamestre.Domain.StudiesOccurrence;
+import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Repository.StudiesOccurrenceRepository;
 import com.p3p.catamestre.Repository.StudiesRepository;
+import com.p3p.catamestre.Repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +24,17 @@ public class StudiesService {
 
     final private StudiesRepository studiesRepository;
     final private StudiesOccurrenceRepository studiesOccurrenceRepository;
+    final private UserRepository userRepository;
 
     @Autowired
-    public StudiesService(StudiesRepository studiesRepository, StudiesOccurrenceRepository studiesOccurrenceRepository) {
+    public StudiesService(StudiesRepository studiesRepository, StudiesOccurrenceRepository studiesOccurrenceRepository, UserRepository userRepository) {
         this.studiesRepository = studiesRepository;
         this.studiesOccurrenceRepository = studiesOccurrenceRepository;
+        this.userRepository = userRepository;
     }
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     public Studies getByCode(String code) {
         Optional<Studies> studiesOptional = studiesRepository.findByCode(code);
@@ -65,7 +74,7 @@ public class StudiesService {
         }
         studies = this.studiesRepository.save(studies);
         List<StudiesOccurrence> studiesOccurrences = studies.getOccurrences();
-        for (StudiesOccurrence studiesOccurrence: studiesOccurrences) {
+        for (StudiesOccurrence studiesOccurrence : studiesOccurrences) {
             studiesOccurrence.setStudies(studies);
             this.studiesOccurrenceRepository.save(studiesOccurrence);
         }
@@ -81,8 +90,8 @@ public class StudiesService {
             List<StudiesOccurrence> occurrences = study.getOccurrences();
 
             for (StudiesOccurrence occurrence : occurrences) {
-                    occurrence.setStudies(null);
-                    studiesOccurrenceRepository.delete(occurrence);
+                occurrence.setStudies(null);
+                studiesOccurrenceRepository.delete(occurrence);
             }
 
             this.studiesRepository.deleteById(id);
@@ -125,9 +134,6 @@ public class StudiesService {
         }
 
 
-
-
-
     }
 
 //    public StudiesOccurrence update(Long id, StudiesOccurrence occurrence) {
@@ -145,10 +151,23 @@ public class StudiesService {
 
 
     public Studies getById(Long id) {
-        return studiesRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return studiesRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
+    public List<Studies> getStudiesByProfessorId(Long professorId) {
+        User professor = userRepository.findById(professorId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        List<Studies> studiesList = entityManager.createQuery("SELECT so.studies FROM StudiesOccurrence so WHERE so.professor = :professor", Studies.class)
+                .setParameter("professor", professor)
+                .getResultList();
+
+        for (Studies studies : studiesList) {
+            List<StudiesOccurrence> occurrences = studies.getOccurrences();
+            occurrences.removeIf(occurrence -> !occurrence.getProfessor().equals(professor));
+        }
+
+        return studiesList;
+    }
 
 
 }

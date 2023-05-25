@@ -6,6 +6,9 @@ import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Repository.StudiesOccurrenceRepository;
 import com.p3p.catamestre.Repository.StudiesRepository;
 import com.p3p.catamestre.Repository.UserRepository;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +33,9 @@ public class StudiesOccurrenceService {
         this.studiesRepository = studiesRepository;
         this.userRepository = userRepository;
     }
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public Page<StudiesOccurrence> getAll(Pageable pageable) {
         return occurrenceRepository.findAll(pageable);

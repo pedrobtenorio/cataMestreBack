@@ -111,6 +111,18 @@ public class StudiesController {
         return new ResponseEntity<>(studies, HttpStatus.OK);
     }
 
+    @GetMapping("professor/{professorId}")
+    @ApiOperation(value = "Get study by professor ID", notes = "Get a study by its Id.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Study returned successfully"),
+            @ApiResponse(code = 404, message = "Study not found by ID")
+    })
+    public ResponseEntity<List<Studies>> getByProfessorId(@PathVariable Long professorId) {
+        List<Studies> studies = studiesService.getStudiesByProfessorId(professorId);
+        return new ResponseEntity<>(studies, HttpStatus.OK);
+    }
+
+
 
 
 
