@@ -6,6 +6,9 @@ import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Repository.StudiesOccurrenceRepository;
 import com.p3p.catamestre.Repository.StudiesRepository;
 import com.p3p.catamestre.Repository.UserRepository;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +33,9 @@ public class StudiesOccurrenceService {
         this.studiesRepository = studiesRepository;
         this.userRepository = userRepository;
     }
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public Page<StudiesOccurrence> getAll(Pageable pageable) {
         return occurrenceRepository.findAll(pageable);
@@ -80,17 +86,26 @@ public class StudiesOccurrenceService {
         throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
     }
 
-    public StudiesOccurrence update(Long id, StudiesOccurrence occurrence) {
-        StudiesOccurrence existingOccurrence = occurrenceRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Study occurrence not found"));
-        existingOccurrence.setStudies(occurrence.getStudies());
-        existingOccurrence.setClassroom(occurrence.getClassroom());
-        existingOccurrence.setProfessor(occurrence.getProfessor());
-        existingOccurrence.setTime(occurrence.getTime());
-        existingOccurrence.setType(occurrence.getType());
-        existingOccurrence.setWeekDay(occurrence.getWeekDay());
-
-        return occurrenceRepository.save(existingOccurrence);
+    public StudiesOccurrence update(Long id, Long studiesId, StudiesOccurrence occurrence) {
+        Optional<Studies> optionalStudies = studiesRepository.findById(studiesId);
+        if(optionalStudies.isPresent()){
+            Studies studies = optionalStudies.get();
+            StudiesOccurrence existingOccurrence = occurrenceRepository.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Study occurrence not found"));
+            existingOccurrence.setClassroom(occurrence.getClassroom());
+            existingOccurrence.setProfessor(occurrence.getProfessor());
+            existingOccurrence.setTime(occurrence.getTime());
+            existingOccurrence.setType(occurrence.getType());
+            existingOccurrence.setClassroom(occurrence.getClassroom());
+            existingOccurrence.setOnlineClassroom(occurrence.getOnlineClassroom());
+            existingOccurrence.setOnlineLink(occurrence.getOnlineLink());
+            existingOccurrence.setWeekDay(occurrence.getWeekDay());
+            existingOccurrence.setStudies(studies);
+            existingOccurrence.setNotes(occurrence.getNotes());
+            existingOccurrence.setActive(occurrence.isActive());
+            return occurrenceRepository.save(existingOccurrence);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
 
     public void delete(Long id) {

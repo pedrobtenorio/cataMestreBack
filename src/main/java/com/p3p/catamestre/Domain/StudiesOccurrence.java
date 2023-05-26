@@ -33,6 +33,10 @@ public class StudiesOccurrence {
     @ManyToOne
     private Studies studies;
 
+    private String onlineLink;
+
+    private String onlineClassroom;
+
 
     public enum StudyType {
         PRESENTIAL, ONLINE, CANCELED
