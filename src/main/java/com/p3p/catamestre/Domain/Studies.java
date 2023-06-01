@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "studies")
 @Getter
@@ -16,30 +18,26 @@ public class Studies {
 
     private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User professor;
 
 
     private String name;
 
-    private String classroom;
+    private String term;
 
-    @Enumerated(EnumType.STRING)
-    private StudyType type;
 
-    private String time;
-
-    private String onlineLink;
-
-    private String onlineClassroom;
-
-    private String notes;
 
     private String color;
 
-    private boolean active;
+    @OneToMany(mappedBy = "studies", cascade = CascadeType.ALL)
+    private List<StudiesOccurrence> occurrences;
 
-    public enum StudyType {
-        PRESENCIAL, ONLINE, CANCELED
+
+    public enum Modality {
+        MANDATORY, ELECTIVE
     }
+
+    @Enumerated(EnumType.STRING)
+    private Modality modality;
+
+
 }

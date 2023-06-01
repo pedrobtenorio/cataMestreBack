@@ -6,6 +6,7 @@ import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Repository.UserRepository;
 import com.p3p.catamestre.Security.Credential;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +22,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,7 +45,20 @@ public class UserService {
 
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    }
+
+
+    public User getLoggedUser(Principal principal) {
+
+
+        Optional<User> userOptional = userRepository.findByEmail(principal.getName());
+        if(userOptional.isPresent()){
+           return userOptional.get();
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
     }
 
     public User getUserById(Long id) {
@@ -69,7 +84,12 @@ public class UserService {
         }
         user.setPassword(this.encodePassword(user.getPassword()));
 
+
         return userRepository.save(user);
+    }
+
+    public List<User> getAllProfessors() {
+        return this.userRepository.findByRoleOrderById(User.Role.TEACHER);
     }
 
 
@@ -78,8 +98,8 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         existingUser.setUsername(user.getUsername());
         existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(this.encodePassword(user.getPassword()));
         existingUser.setRole(user.getRole());
+        existingUser.setName(user.getName());
         return userRepository.save(existingUser);
     }
 
@@ -92,12 +112,11 @@ public class UserService {
         Optional<User> userOptional = this.userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.getClasses().addAll(studies);
+            user.setStudies(studies);
             return this.userRepository.save(user);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-
     }
 
     public ResponseEntity<AuthResponse> authenticate(Credential credential) {

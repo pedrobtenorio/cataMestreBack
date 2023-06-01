@@ -1,5 +1,6 @@
 package com.p3p.catamestre.Domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +26,11 @@ public class User implements UserDetails {
 
     private String username;
 
+    private String name;
+
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -40,9 +44,9 @@ public class User implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdatedDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_studies", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "studies_id"))
-    private Set<Studies> classes = new HashSet<>();
+    private Set<Studies> studies = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

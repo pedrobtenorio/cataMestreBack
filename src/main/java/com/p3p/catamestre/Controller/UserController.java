@@ -1,6 +1,6 @@
 package com.p3p.catamestre.Controller;
-
 import com.p3p.catamestre.Domain.AuthResponse;
+import com.p3p.catamestre.Domain.Studies;
 import com.p3p.catamestre.Domain.User;
 import com.p3p.catamestre.Security.Credential;
 import com.p3p.catamestre.Service.UserService;
@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -26,6 +27,17 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    @ApiOperation(value = "Get current logged user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User returned successfully"),
+            @ApiResponse(code = 404, message = "User not found ")
+    })
+    public ResponseEntity<User>  getUserById(Principal principal) {
+        User user = this.userService.getLoggedUser(principal);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -50,7 +62,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @ApiOperation(value = "Create a user", notes = "Create a new user.")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "User created successfully")
@@ -59,6 +71,14 @@ public class UserController {
         User createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
+
+    @PostMapping("/addClasses/{id}")
+    public ResponseEntity<User> addClassesToUser(@PathVariable Long id, @RequestBody Set<Studies> studies) {
+        User user = userService.AddClasses(id, studies);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a user", notes = "Update an existing user.")
@@ -90,6 +110,13 @@ public class UserController {
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody Credential credential) {
         return this.userService.authenticate(credential);
+    }
+
+
+    @GetMapping("/find-professors")
+    public ResponseEntity<List<User>> getAllProfessors() {
+       List<User> users = userService.getAllProfessors();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
 }
